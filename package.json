@@ -1,7 +1,7 @@
 {
   "name": "react-vite-full-template",
   "private": true,
-  "version": "0.0.0",
+  "version": "3.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.2",
+    "@types/firebase": "^3.2.1",
     "@types/mixpanel-browser": "^2.38.1",
     "bootstrap": "^5.2.3",
+    "firebase": "^9.17.2",
     "mixpanel-browser": "^2.45.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

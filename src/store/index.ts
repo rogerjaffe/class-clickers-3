@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import reducer from "./reducer";
-import initialState from "./initialState";
+import { initialState } from "./initialState";
 import { useDispatch } from "react-redux";
 
 const store = configureStore({
