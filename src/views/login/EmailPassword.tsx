@@ -1,12 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { getAuth, Auth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, Auth, signInWithEmailAndPassword, User } from "firebase/auth";
 import "./EmailPassword.css";
 import { useContext, useEffect, useState } from "react";
 import { FirebaseAppContext } from "../../main";
 import { useAppDispatch } from "../../store";
 import { setError, setLoggedIn } from "../../store/actions";
 
+type TUser = {accessToken: string}; 
 const LoginChoices = () => {
   const navigate = useNavigate();
   const firebaseApp = useContext(FirebaseAppContext);
@@ -27,7 +28,18 @@ const LoginChoices = () => {
   const loginClick = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        dispatch(setLoggedIn(userCredential.user));
+        console.log(userCredential.user);
+        const {
+          accessToken,
+          email,
+          emailVerified,
+          metadata,
+          phoneNumber,
+          photoURL,
+          providerId,
+          uid,
+        } = userCredential.user;
+        dispatch(setLoggedIn({accessToken, email, emailVerified, metadata, phoneNumber,photoURL, providerId, uid}));
       })
       .catch((error) => {
         dispatch(
