@@ -1,36 +1,32 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useSelector } from "react-redux";
-import { Route, Routes, useNavigate } from "react-router-dom";
-import mixpanel from "mixpanel-browser";
-import { TState, useAppDispatch } from "../store";
-import { addAction } from "../store/actions";
+import { Route, Routes } from "react-router-dom";
+import { TState, useAppDispatch } from "../main";
 import Home from "./Home";
 import "./Home.css";
-import { addWithDelayThunk } from "../store/thunks";
 import useMixpanelSendRoute from "../hooks/useMixpanelSendRoute";
-import Page from "./Page";
 import Footer from "./common/Footer";
 import Header from "./common/Header";
-import LoginChoices from "./login/LoginChoices";
+import Login from "./login/Login";
 import EmailPassword from "./login/EmailPassword";
 import Controller from "./controller/Controller";
+import SetCode from "./controller/SetCode";
+import RequireAuth from "./common/RequireAuth";
+import fb from "../api/firebase";
+import { FirebaseAppContext } from "../main";
+import LoginAgain from "./login/LoginAgain";
+import Validate from "./login/Validate";
 
 function App() {
   useMixpanelSendRoute();
   const code = useSelector((state: TState) => state.code);
-  // const { count, addWithDelayPending } = useSelector((state: TState) => state);
-  // const dispatch = useAppDispatch();
-  // const navigate = useNavigate();
-
-  // const addCount = () => {
-  //   mixpanel.track("add-count", { count });
-  //   dispatch(addAction(2));
-  // };
-  //
-  // const addDelayedCount = () => {
-  //   mixpanel.track("add-delayed-count", { count });
-  //   dispatch(addWithDelayThunk(3));
-  // };
+  const dispatch = useAppDispatch();
+  const firebaseApp = useContext(FirebaseAppContext);
+  const monitorAuthStateProcess = (
+    authState: boolean,
+    errorCode?: string
+  ): void => {};
+  fb.monitorAuthStateFcn(firebaseApp, monitorAuthStateProcess);
 
   return (
     <div className="container">
@@ -41,10 +37,24 @@ function App() {
         <div className="card-body">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<LoginChoices />} />
-            <Route path="/login/email" element={<EmailPassword />} />
-            <Route path="/controller" element={<Controller />} />
-            <Route path="page2" element={<Page text="Page 2" />} />
+            <Route path="/controller/login" element={<Login />} />
+            <Route path="/controller/login-again" element={<LoginAgain />} />
+            <Route
+              path="/controller/setcode"
+              element={
+                <RequireAuth>
+                  <SetCode />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/controller"
+              element={
+                <RequireAuth>
+                  <Controller />
+                </RequireAuth>
+              }
+            />
           </Routes>
         </div>
         <div className="card-footer">
@@ -56,38 +66,3 @@ function App() {
 }
 
 export default App;
-
-// <div className="row">
-//   <div className="col-12">
-//     <button className="btn btn-success" onClick={() => navigate("/")}>
-//       Home
-//     </button>
-//     <button
-//       className="btn btn-warning"
-//       onClick={() => navigate("/page1")}
-//     >
-//       Page 1
-//     </button>
-//     <button
-//       className="btn btn-danger"
-//       onClick={() => navigate("/page2")}
-//     >
-//       Page 2
-//     </button>
-//   </div>
-// </div>
-// <div className="row">
-//   <div className="col-12">
-//     <button className="btn btn-primary" onClick={addCount}>
-//       count is {count}
-//     </button>
-//     <button
-//       className={`btn ${
-//         addWithDelayPending ? "btn-danger" : "btn-primary"
-//       }`}
-//       onClick={addDelayedCount}
-//     >
-//       Delay count is {count}
-//     </button>
-//   </div>
-// </div>

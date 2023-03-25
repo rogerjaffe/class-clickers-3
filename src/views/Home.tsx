@@ -21,7 +21,7 @@ const Home = () => {
           <button
             className="btn btn-primary home-select-button"
             onClick={() => {
-              navigate("/login");
+              navigate("/controller/login");
             }}
           >
             Controller

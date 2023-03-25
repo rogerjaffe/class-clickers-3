@@ -1,0 +1,8 @@
+.google-button {
+  width: 200px;
+  cursor: pointer;
+}
+.error-message {
+  color: red;
+  font-style: italic;
+}

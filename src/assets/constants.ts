@@ -9,10 +9,4 @@ export const FIREBASE_CONFIG = {
   measurementId: "G-VZX5MCHF45",
 };
 
-export const MODES = {
-  TRIAL_MODE: "trialMode",
-  PAID_MODE: "paidMode",
-  PLAYER_MODE: "playerMode",
-};
-
 export const CODE_LENGTH = 4;

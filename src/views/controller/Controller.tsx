@@ -4,7 +4,7 @@ import { getAuth, Auth } from "firebase/auth";
 import "./Controller.css";
 import { useContext, useEffect, useState } from "react";
 import { FirebaseAppContext } from "../../main";
-import { TState, useAppDispatch } from "../../store";
+import { TState, useAppDispatch } from "../../main";
 import { setCode } from "../../store/actions";
 import { CODE_LENGTH } from "../../assets/constants";
 import getRandomId from "../../utilities/getRandomId";

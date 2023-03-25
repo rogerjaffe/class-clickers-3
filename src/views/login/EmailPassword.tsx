@@ -1,60 +1,54 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { getAuth, Auth, signInWithEmailAndPassword, User } from "firebase/auth";
+import fb from "../../api/firebase";
 import "./EmailPassword.css";
-import { useContext, useEffect, useState } from "react";
-import { FirebaseAppContext } from "../../main";
-import { useAppDispatch } from "../../store";
-import { setError, setLoggedIn } from "../../store/actions";
+import { useState } from "react";
+import { User } from "firebase/auth";
+import { FirebaseApp } from "firebase/app";
 
-type TUser = {accessToken: string}; 
-const LoginChoices = () => {
-  const navigate = useNavigate();
-  const firebaseApp = useContext(FirebaseAppContext);
-  const [auth, setAuth] = useState<Auth>(getAuth(firebaseApp));
-  const [email, setEmail] = useState<string>("rogerjaffe@gmail.com");
+export type TEmailPasswordUserObj = User & {
+  accessToken?: string;
+  metadata: {
+    createdAt: number;
+    lastSigninTime: number;
+    lastLoginAt: number;
+  };
+};
+
+interface TLoginChoicesProps {
+  onLoginSuccess: (userObj: TEmailPasswordUserObj) => void;
+  firebaseApp: FirebaseApp;
+}
+
+const LoginChoices = ({ onLoginSuccess, firebaseApp }: TLoginChoicesProps) => {
+  const [email, setEmail] = useState<string>("abc@abc.com");
   const [password, setPassword] = useState<string>("password");
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    setAuth(getAuth(firebaseApp));
-  }, []);
+  const [loginError, setLoginError] = useState<string>("");
 
   const onChange =
     (setter: (value: string) => void) =>
-    (event: React.ChangeEvent<HTMLInputElement>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       setter(event.currentTarget.value);
+      setLoginError("");
+    };
 
-  const loginClick = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log(userCredential.user);
-        const {
-          accessToken,
-          email,
-          emailVerified,
-          metadata,
-          phoneNumber,
-          photoURL,
-          providerId,
-          uid,
-        } = userCredential.user;
-        dispatch(setLoggedIn({accessToken, email, emailVerified, metadata, phoneNumber,photoURL, providerId, uid}));
-      })
-      .catch((error) => {
-        dispatch(
-          setError({
-            error: true,
-            errorCode: error.code,
-            errorMsg: error.message,
-          })
-        );
-      });
+  const loginClick = async () => {
+    setLoginError("");
+    try {
+      const payload = await fb.signInWithEmailAndPassword(
+        firebaseApp,
+        email,
+        password
+      );
+      const userObj = payload.user as unknown as TEmailPasswordUserObj;
+      onLoginSuccess(userObj);
+    } catch (error: any) {
+      setLoginError(error.errorCode);
+    }
   };
 
   return (
     <div className="row">
-      <div className="col-md-6 offset-md-3 col-sm-12 mb-3">
+      <div className="col-12 mb-3">
         <div className="login-labels">Email:</div>
         <input
           type="text"
@@ -65,7 +59,7 @@ const LoginChoices = () => {
           onChange={onChange(setEmail)}
         />
       </div>
-      <div className="col-md-6 offset-md-3 col-sm-12 mb-3">
+      <div className="col-12 mb-3">
         <div className="login-labels">Password:</div>
         <input
           type="password"
@@ -76,7 +70,7 @@ const LoginChoices = () => {
           onChange={onChange(setPassword)}
         />
       </div>
-      <div className="col-md-6 offset-md-3 col-sm-12 mb-3 btn-login-left">
+      <div className="col-12 mb-3">
         <button
           aria-label="Login"
           className="btn btn-primary btn-login-block"
@@ -85,6 +79,24 @@ const LoginChoices = () => {
           Login
         </button>
       </div>
+      {loginError === "auth/wrong-password" ||
+      loginError === "auth/user-not-found" ? (
+        <div className="col-12 mb-3 btn-login-left">
+          <h6
+            aria-label="Invalid username / password"
+            className="error-message"
+          >
+            Invalid username / password
+          </h6>
+        </div>
+      ) : null}
+      {loginError === "auth/internal-error" ? (
+        <div className="col-12 mb-3 btn-login-left">
+          <h6 aria-label="Internet error" className="error-message">
+            There was an internet error
+          </h6>
+        </div>
+      ) : null}
     </div>
   );
 };

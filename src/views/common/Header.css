@@ -1,0 +1,14 @@
+.link {
+  cursor: pointer;
+  color: blue;
+}
+.link:hover {
+  color: yellow;
+}
+.header-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.sub-header-text {
+  font-size: 0.8rem;
+}
