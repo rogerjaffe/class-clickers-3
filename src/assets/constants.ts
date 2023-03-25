@@ -10,3 +10,9 @@ export const FIREBASE_CONFIG = {
 };
 
 export const CODE_LENGTH = 4;
+
+export const STATES = {
+  SET_ID: 0,
+  ARMED: 1,
+  LOCKOUT: 2,
+};

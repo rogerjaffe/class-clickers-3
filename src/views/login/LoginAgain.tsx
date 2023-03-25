@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./Login.css";
+import "./LoginAgain.css";
 
 const LoginAgain = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const LoginAgain = () => {
         <button
           aria-label="Login"
           className="btn btn-primary btn-login-block"
-          onClick={() => navigate("/login")}
+          onClick={() => navigate("/controller/login")}
         >
           Login again
         </button>

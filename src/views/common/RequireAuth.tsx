@@ -7,7 +7,7 @@ const RequireAuth = ({ children }: { children: JSX.Element }) => {
   const auth = useSelector((state: TState) => state.auth);
 
   if (!auth) {
-    return <Navigate to="/login-again" replace />;
+    return <Navigate to="/controller/login-again" replace />;
   }
   return children;
 };

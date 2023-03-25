@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Controller.css";
 import { useState } from "react";
-import { useAppDispatch } from "../../main";
+import { FirebaseAppContext, useAppDispatch } from "../../main";
 import { CODE_LENGTH } from "../../assets/constants";
 import getRandomId from "../../utilities/getRandomId";
 import "./SetCode.css";
@@ -41,6 +41,7 @@ const SetCode = () => {
   const [localCode, setLocalCode] = useState<string>(reconcileCode());
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const firebaseApp = useContext(FirebaseAppContext);
 
   const onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setLocalCode(evt.currentTarget.value);
@@ -48,7 +49,7 @@ const SetCode = () => {
 
   const setCodeClick = () => {
     dispatch(setCode(localCode));
-    dispatch(setControlInFbThunk({ id: localCode }));
+    dispatch(setControlInFbThunk({ app: firebaseApp, id: localCode }));
     navigate("/controller");
   };
 

@@ -9,9 +9,11 @@ import {
 import mixpanel from "mixpanel-browser";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { FirebaseApp } from "firebase/app";
+import { getDatabase, ref, set } from "firebase/database";
 import * as R from "ramda";
 import { NavigateFunction } from "react-router";
 import { TThunkExtraArgument } from "../../main";
+import { STATES } from "../../assets/constants";
 
 // export const addWithDelayThunk = createAsyncThunk(
 //   "ADD_WITH_DELAY",
@@ -26,6 +28,14 @@ import { TThunkExtraArgument } from "../../main";
 
 type TSetControlInFbThunk = {
   id: string;
+  app: FirebaseApp;
+};
+
+type TControl = {
+  id: string;
+  appState: number;
+  enable: boolean;
+  time: number;
 };
 
 export const setControlInFbThunk = createAsyncThunk(
@@ -34,6 +44,14 @@ export const setControlInFbThunk = createAsyncThunk(
     const { id } = parms;
     const { dispatch, extra } = thunkAPI;
     const { app } = extra as TThunkExtraArgument;
+    const control = {
+      id,
+      appState: STATES.ARMED,
+      enable: false,
+      time: Date.now(),
+    } as TControl;
+    const db = getDatabase(app);
+    set(ref(db, "sessions/" + id), control);
   }
 );
 //   }
