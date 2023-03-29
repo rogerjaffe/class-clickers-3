@@ -1,4 +1,4 @@
-export type TUser = {
+export type TUserObj = {
   accessToken: string;
   createdAt: number;
   creationTime: number;

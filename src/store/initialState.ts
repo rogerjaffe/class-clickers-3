@@ -1,6 +1,7 @@
 import { User } from "firebase/auth";
 import { TStatus } from "../api/firebase";
-import { TUserObj } from "../types";
+import { TUserObj } from "../types/TUser";
+import { TControl } from "./thunks/setControlInFbThunk";
 
 type TState = {
   auth: boolean;
@@ -9,6 +10,7 @@ type TState = {
   isTeacher: boolean;
   isStudent: boolean;
   code: string;
+  control: TControl;
   error: boolean;
   errorCode: string;
   errorMsg: string;

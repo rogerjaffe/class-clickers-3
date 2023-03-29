@@ -9,7 +9,7 @@ import {
 import mixpanel from "mixpanel-browser";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { FirebaseApp } from "firebase/app";
-import { getDatabase, ref, set } from "firebase/database";
+import { DataSnapshot, getDatabase, onValue, ref, set, update } from "firebase/database";
 import * as R from "ramda";
 import { NavigateFunction } from "react-router";
 import { TThunkExtraArgument } from "../../main";
@@ -31,12 +31,16 @@ type TSetControlInFbThunk = {
   app: FirebaseApp;
 };
 
-type TControl = {
+export type TControl = {
   id: string;
   appState: number;
   enable: boolean;
   time: number;
 };
+
+const fbNodeChanged = ((snapshot: DataSnapshot) => {
+  
+})
 
 export const setControlInFbThunk = createAsyncThunk(
   "SET_CONTROL_IN_FB",
@@ -51,7 +55,8 @@ export const setControlInFbThunk = createAsyncThunk(
       time: Date.now(),
     } as TControl;
     const db = getDatabase(app);
-    set(ref(db, "sessions/" + id), control);
+    update(ref(db, "sessions/" + id), control);
+    onValue(ref(db, "sessions/"+id), fbNodeChanged);
   }
 );
 //   }
